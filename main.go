@@ -1,3 +1,5 @@
+// Copyright (c) Plain Technologies Aps
+
 package main
 
 import (
