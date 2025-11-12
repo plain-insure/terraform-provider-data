@@ -1,0 +1,65 @@
+package provider
+
+import (
+	"context"
+
+	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/provider"
+	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+)
+
+// Ensure DataProvider satisfies various provider interfaces.
+var _ provider.Provider = &DataProvider{}
+
+// DataProvider defines the provider implementation.
+type DataProvider struct {
+	// version is set to the provider version on release, "dev" when the
+	// provider is built and ran locally, and "test" when running acceptance
+	// testing.
+	version string
+}
+
+// DataProviderModel describes the provider data model.
+type DataProviderModel struct {
+	// Provider configuration would go here, but this provider doesn't need any
+}
+
+func (p *DataProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+	resp.TypeName = "data"
+	resp.Version = p.version
+}
+
+func (p *DataProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		Description: "Provider for simple data manipulation resources",
+	}
+}
+
+func (p *DataProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+	var data DataProviderModel
+
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+}
+
+func (p *DataProvider) Resources(ctx context.Context) []func() resource.Resource {
+	return []func() resource.Resource{
+		NewNotNullResource,
+	}
+}
+
+func (p *DataProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+	return []func() datasource.DataSource{}
+}
+
+func New(version string) func() provider.Provider {
+	return func() provider.Provider {
+		return &DataProvider{
+			version: version,
+		}
+	}
+}
