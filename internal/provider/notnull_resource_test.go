@@ -32,7 +32,25 @@ func TestAccNotNullResource(t *testing.T) {
 					resource.TestCheckResourceAttr("data_notnull.test", "result", "updated_value"),
 				),
 			},
-			// Test with only default value
+			// Test state preservation - remove value, should preserve previous result
+			{
+				Config: testAccNotNullResourceConfigDefaultOnly("default_only"),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("data_notnull.test", "default_value", "default_only"),
+					// Result should preserve "updated_value" from previous state when value becomes null
+					resource.TestCheckResourceAttr("data_notnull.test", "result", "updated_value"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccNotNullResourceDefaultOnly(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Test creating resource with only default value (no prior state)
 			{
 				Config: testAccNotNullResourceConfigDefaultOnly("default_only"),
 				Check: resource.ComposeAggregateTestCheckFunc(
