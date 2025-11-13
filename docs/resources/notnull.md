@@ -3,12 +3,12 @@
 page_title: "data_notnull Resource - data"
 subcategory: ""
 description: |-
-  NotNull resource that returns a non-null value based on input value and default
+  NotNull resource that returns a non-null value based on input value and default. It will maintain prior non-null value when input changes to null. Working like a sticky value with a default fallback for the initial run.
 ---
 
 # data_notnull (Resource)
 
-NotNull resource that returns a non-null value based on input value and default
+NotNull resource that returns a non-null value based on input value and default. It will maintain prior non-null value when input changes to null. Working like a sticky value with a default fallback for the initial run.
 
 ## Example Usage
 
@@ -60,8 +60,8 @@ output "result3" {
 
 ### Optional
 
-- `default_value` (String) The default value to use when value is null
-- `value` (String) The primary value to use for result
+- `default_value` (String) The default value to use when value is null and no previous value exists
+- `value` (String) The primary value to use for result will keep last non-null value when changed to null
 
 ### Read-Only
 

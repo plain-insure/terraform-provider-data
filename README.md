@@ -15,8 +15,8 @@ The `data_notnull` resource provides a way to handle nullable values with fallba
 #### Schema
 
 - **Inputs:**
-  - `value` (string, optional) - The primary value to use for the result
-  - `default_value` (string, optional) - The default value to use when value is null
+  - `value` (string, optional) - The primary value to use for the result will keep last non-null value when changed to null
+  - `default_value` (string, optional) - The default value to use when value is and no previous value exists
 
 - **Outputs:**
   - `result` (string, computed) - The computed result value
