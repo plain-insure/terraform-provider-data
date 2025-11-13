@@ -135,20 +135,20 @@ func (r *NotNullResource) Delete(ctx context.Context, req resource.DeleteRequest
 
 // computeResult determines the result value based on the inputs and prior state
 // Logic:
-// 1. If value is not null and not empty, use value
-// 2. If value is null or empty and we have prior state with a result (meaning value changed from non-null to null), use the prior result
-// 3. If value is null or empty and we have no prior state, use default_value (if not null and not empty)
-// 4. If all are null or empty, use empty string
+// 1. If value is not null and not unknown, use value
+// 2. If value is null/unknown and we have prior state with a result (meaning value changed from non-null to null/unknown), use the prior result
+// 3. If value is null/unknown and we have no prior state, use default_value
+// 4. If all are null, use empty string
 func (r *NotNullResource) computeResult(data *NotNullResourceModel, priorState *NotNullResourceModel) string {
-	// If value is provided (not null and not empty), use it
-	if !data.Value.IsNull() && data.Value.ValueString() != "" {
+	// If value is provided (not null and not unknown), use it
+	if !data.Value.IsNull() && !data.Value.IsUnknown() {
 		return data.Value.ValueString()
 	}
 
 	// Value is null or empty, check if we have a stored state with a non-empty result
 	// (meaning value changed from non-null to null/empty)
 	if priorState != nil && !priorState.Result.IsNull() && priorState.Result.ValueString() != "" {
-		// Value changed from something to null/empty, return the previously stored result
+		// Value changed from something to null/unknown, return the previously stored result
 		return priorState.Result.ValueString()
 	}
 

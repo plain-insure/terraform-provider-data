@@ -26,10 +26,12 @@ The `data_notnull` resource provides a way to handle nullable values with fallba
 
 The resource determines the `result` value using the following logic:
 
-1. If `value` is not null, `result` equals `value`
-2. If `value` is null and there is stored state (meaning value changed from non-null to null), `result` preserves the previous stored value
-3. If `value` is null and there is no stored state, `result` equals `default_value`
+1. If `value` is not null and not unknown, `result` equals `value`
+2. If `value` is null or unknown and there is stored state (meaning value changed from non-null to null/unknown), `result` preserves the previous stored value
+3. If `value` is null or unknown and there is no stored state, `result` equals `default_value`
 4. If all inputs are null, `result` is an empty string
+
+**Note**: During Terraform plan/apply operations, if a dependent resource is being updated, the `value` may become "unknown". In such cases, the resource will preserve the previous value from state, ensuring the result is never null.
 
 #### Example Usage
 
