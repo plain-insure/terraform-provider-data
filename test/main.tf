@@ -1,3 +1,5 @@
+# Copyright (c) Plain Technologies Aps
+
 
 
 terraform {
@@ -13,7 +15,7 @@ terraform {
 
 
 locals {
-    demo = ""
+    demo = null
 }
 
 resource "data_notnull" "validation_token2" {
